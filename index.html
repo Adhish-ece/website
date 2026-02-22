@@ -58,6 +58,12 @@ body {
 }
 body:hover #cursor { opacity:1; }
 
+/* Hide cursor on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  body { cursor: auto !important; }
+  #cursor, #cursor-ring { display: none !important; }
+}
+
 /* LOADER */
 #loader {
   position: fixed; inset: 0;
@@ -207,7 +213,7 @@ nav {
 
 /* HERO */
 #hero {
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
   display: flex;
   align-items: center;
@@ -1125,7 +1131,7 @@ footer a { color: var(--blue); text-decoration: none; }
   .logo-chip { width: 26px; height: 26px; }
 
   /* HERO */
-  #hero { height: 100svh; min-height: 600px; }
+  #hero { height: auto; min-height: 100svh; padding-bottom: 60px; }
   .hero-content { padding: 0 16px; padding-top: 90px; gap: 24px; }
   .hero-greeting { font-size: 11px; letter-spacing: 2px; }
   .hero-desc { font-size: 14px; margin-bottom: 28px; }
@@ -1617,13 +1623,13 @@ footer a { color: var(--blue); text-decoration: none; }
     <p class="contact-sub">Whether you're exploring a collaboration, have an embedded systems challenge, or want to discuss firmware engineering opportunities — I'd be glad to connect. Open to full-time roles, internships, and project-based work.</p>
 
     <div class="contact-links-grid">
-      <a href="mailto:adhishadhish547@gmail.com" class="contact-link">
+      <a href="#" class="contact-link" id="email-contact-link">
         <div class="contact-link-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
         </div>
         <div>
           <div class="clink-label">Email</div>
-          <div class="clink-value">adhishadhish547@gmail.com</div>
+          <div class="clink-value" id="email-display">adhishadhish547@gmail.com</div>
         </div>
       </a>
       <a href="https://github.com/Adhish-ece" target="_blank" rel="noopener noreferrer" class="contact-link">
@@ -1687,20 +1693,28 @@ footer a { color: var(--blue); text-decoration: none; }
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" onerror="void(0)"></script>
+<script>
 // ============= LOADER =============
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    const loader = document.getElementById('loader');
-    loader.style.opacity = '0';
-    loader.style.pointerEvents = 'none';
-    setTimeout(() => loader.style.display = 'none', 800);
-  }, 2400);
-});
+function dismissLoader() {
+  var loader = document.getElementById('loader');
+  if (!loader || loader.style.display === 'none') return;
+  loader.style.opacity = '0';
+  loader.style.pointerEvents = 'none';
+  setTimeout(function() { loader.style.display = 'none'; }, 800);
+}
+window.addEventListener('load', function() { setTimeout(dismissLoader, 2200); });
+setTimeout(dismissLoader, 4000);
 
 // ============= CURSOR =============
 const cursor = document.getElementById('cursor');
 const cursorRing = document.getElementById('cursor-ring');
+const isTouchDevice = ('ontouchstart' in window) || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+if (isTouchDevice) {
+  cursor.style.display = 'none';
+  cursorRing.style.display = 'none';
+  document.body.style.cursor = 'auto';
+}
 let mx = 0, my = 0, rx = 0, ry = 0;
 document.addEventListener('mousemove', e => {
   mx = e.clientX; my = e.clientY;
@@ -1714,7 +1728,7 @@ function animateRing() {
   cursorRing.style.top = ry + 'px';
   requestAnimationFrame(animateRing);
 }
-animateRing();
+if (!isTouchDevice) animateRing();
 document.querySelectorAll('a, button, .skill-item, .project-card, .timeline-card').forEach(el => {
   el.addEventListener('mouseenter', () => { cursor.style.width = '6px'; cursor.style.height = '6px'; cursorRing.style.width = '50px'; cursorRing.style.height = '50px'; cursorRing.style.borderColor = 'var(--cyan)'; });
   el.addEventListener('mouseleave', () => { cursor.style.width = '12px'; cursor.style.height = '12px'; cursorRing.style.width = '36px'; cursorRing.style.height = '36px'; cursorRing.style.borderColor = 'var(--blue)'; });
@@ -2214,6 +2228,13 @@ function closeMobileNavIfOpen() {
   }
 }
 
+// ============= EMAIL LINK (bypass Cloudflare obfuscation) =============
+(function() {
+  var u = 'adhishadhish547', d = 'gmail.com';
+  var link = document.getElementById('email-contact-link');
+  if (link) link.href = 'mailto:' + u + '@' + d;
+})();
+
 // ============= RESUME DOWNLOAD NOTICE =============
 // The Download Resume button uses href="resume.pdf" — just place your PDF 
 // named "resume.pdf" in the same folder as this HTML file.
@@ -2226,7 +2247,7 @@ document.getElementById('resume-btn').addEventListener('click', function(e) {
     e.preventDefault();
     const tip = document.createElement('div');
     tip.style.cssText = `position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid var(--blue);color:var(--text);padding:12px 24px;border-radius:8px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;z-index:9000;box-shadow:var(--glow-blue);text-align:center;`;
-    tip.innerHTML = '📄 Add your <strong style="color:var(--blue)">resume.pdf</strong> to the same folder<br><span style="opacity:0.6;font-size:10px;">or update the href on the Download Resume button</span>';
+    tip.innerHTML = '📄 Add your <strong style="color:var(--blue)">resume.pdf</strong> file to the same folder as this HTML file.';
     document.body.appendChild(tip);
     setTimeout(() => tip.remove(), 4000);
   }
