@@ -719,6 +719,16 @@ section {
   margin-bottom: 18px;
   color: var(--blue);
 }
+/* Project image (only used when a project has an "image" set) */
+.project-image {
+  display: block;
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin-bottom: 18px;
+}
 .project-tag {
   display: inline-block;
   font-family: 'Share Tech Mono', monospace;
@@ -779,6 +789,7 @@ section {
   position: relative;
   overflow: hidden;
 }
+.exp-card + .exp-card { margin-top: 24px; }
 .exp-card::after {
   content: '</ experience>';
   position: absolute;
@@ -1052,6 +1063,17 @@ footer a { color: var(--blue); text-decoration: none; }
   transition: color .3s;
 }
 .modal-close:hover { color: var(--blue); }
+/* Project image inside modal (hidden when project has no image) */
+.modal-image {
+  display: block;
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+.modal-image[hidden] { display: none; }
 .modal-title {
   font-family: 'Orbitron', monospace;
   font-size: 18px;
@@ -1281,7 +1303,7 @@ footer a { color: var(--blue); text-decoration: none; }
       <line x1="20" y1="24" x2="20" y2="28" stroke="#00bfff" stroke-width="1.5"/>
       <text x="12.5" y="19" fill="#00ffff" font-family="monospace" font-size="6" font-weight="bold">AE</text>
     </svg>
-    ADHISH
+    <span id="logo-text">ADHISH</span>
   </a>
   <ul class="nav-links" id="nav-links">
     <li><a href="#about" onclick="smoothScroll(event,'about')">About</a></li>
@@ -1312,23 +1334,19 @@ footer a { color: var(--blue); text-decoration: none; }
 
   <div class="hero-content">
     <div class="hero-text">
-      <div class="hero-greeting">&gt; ENGINEER.INIT()</div>
-      <h1 class="hero-name">Hi, I'm <br><span>Adhish</span></h1>
+      <div class="hero-greeting" id="hero-greeting"></div>
+      <h1 class="hero-name"><span id="hero-hello"></span> <br><span id="hero-name"></span></h1>
       <div class="hero-role"><span id="typed-text"></span></div>
-      <p class="hero-desc">
-        Electronics & Communication Engineer specializing in Embedded Systems, Firmware Development, and hardware-software integration. Building reliable systems at the edge of hardware.
-      </p>
+      <p class="hero-desc" id="hero-desc"></p>
       <div class="hero-buttons">
         <a href="#projects" class="btn btn-primary" onclick="smoothScroll(event,'projects')">View Projects</a>
-        <a href="resume/resume.pdf" download="Adhish_Resume.pdf" class="btn btn-secondary" id="resume-btn">Download Resume</a>
+        <a href="#" class="btn btn-secondary" id="resume-btn">Download Resume</a>
         <a href="#contact" class="btn btn-ghost" onclick="smoothScroll(event,'contact')">Contact Me</a>
       </div>
     </div>
     <div class="hero-photo-wrap">
       <div class="photo-ring">
-        <div class="photo-inner">
-         <img src="photo/photo.JPG" alt="Adhish" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
-        </div>
+        <div class="photo-inner" id="hero-photo-box"><!-- Filled by renderProfile() --></div>
       </div>
     </div>
   </div>
@@ -1343,72 +1361,15 @@ footer a { color: var(--blue); text-decoration: none; }
 <section id="about">
   <div class="section-header fade-in">
     <span class="section-num">01.</span>
-    <h2 class="section-title">About Me</h2>
+    <h2 class="section-title" id="about-title"></h2>
     <div class="section-line"></div>
   </div>
   <div class="about-grid">
     <div class="about-text fade-in">
-     <p>I'm an Electronics & Communication Engineer with a strong interest in <strong>Embedded Systems</strong> and <strong>Firmware Development</strong>. I enjoy working at the intersection of hardware and software, building practical systems that solve real-world problems.</p>
-
-<p>I have working knowledge of <strong>C</strong>, <strong>C++</strong>, and basic <strong>Python</strong>, along with hands-on experience in microcontrollers, communication protocols, and low-level programming. I focus on writing efficient, reliable code that interacts directly with hardware.</p>
-
-<p>Currently, I am undergoing professional training at <strong>Emertxe Information Technology</strong>, where I am strengthening my skills in embedded C, Linux, RTOS concepts, and peripheral interfacing. I continuously work on improving my problem-solving and system design abilities.</p>
-
-<div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-num" data-target="10">0</div>
-          <div class="stat-label">Projects Built</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num" data-target="4">0</div>
-          <div class="stat-label">MCU Families</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num" data-target="6">0</div>
-          <div class="stat-label">Years Learning</div>
-        </div>
-      </div>
+      <div id="about-paragraphs"><!-- Filled by renderAbout() --></div>
+      <div class="stats-row" id="stats-row"><!-- Filled by renderStats() --></div>
     </div>
-    <div class="timeline fade-in">
-      <div class="timeline-item" onclick="toggleTimeline(this)">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-year">2026 – PRESENT</div>
-          <div class="timeline-title">Embedded Systems Training</div>
-          <div class="timeline-sub">Emertxe Information Technology</div>
-          <div class="timeline-details">
-            Completed intensive hands-on training in C, C++, and Data Structures with strong fundamentals in Linux operating system concepts. Gained practical experience working with PIC microcontrollers, including peripheral interfacing and embedded system development.
-          </div>        
-        </div>
-      </div>
-      <div class="timeline-item" onclick="toggleTimeline(this)">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-year">2022 – 2025</div>
-          <div class="timeline-title">B.Tech – Electronics & Communication</div>
-          <div class="timeline-sub">Bachelor of Technology</div>
-          <div class="timeline-details">Comprehensive curriculum covering digital electronics, signal processing, VLSI design, communication systems, and microprocessor architecture. Strong foundation in both theory and lab-based experimentation.</div>
-        </div>
-      </div>
-      <div class="timeline-item" onclick="toggleTimeline(this)">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-year">2019 – 2022</div>
-          <div class="timeline-title">Diploma – Electronics Engineering</div>
-          <div class="timeline-sub">Polytechnic Diploma</div>
-          <div class="timeline-details">Foundational grounding in electronic circuits, PCB design, instrumentation, and basic microcontroller programming. Developed practical skills through lab projects and mini-systems development.</div>
-        </div>
-      </div>
-      <div class="timeline-item" onclick="toggleTimeline(this)">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-year">EARLIER</div>
-          <div class="timeline-title">THSLC – Electronics Trade</div>
-          <div class="timeline-sub">Technical High School</div>
-          <div class="timeline-details">Vocational training in electronics fundamentals — resistors, capacitors, semiconductors, and basic circuit troubleshooting. This is where the engineering journey began.</div>
-        </div>
-      </div>
-    </div>
+    <div class="timeline fade-in" id="timeline"><!-- Filled by renderTimeline() --></div>
   </div>
 </section>
 
@@ -1416,107 +1377,22 @@ footer a { color: var(--blue); text-decoration: none; }
 <section id="skills">
   <div class="section-header fade-in">
     <span class="section-num">02.</span>
-    <h2 class="section-title">Technical Skills</h2>
+    <h2 class="section-title" id="skills-title"></h2>
     <div class="section-line"></div>
   </div>
-  <div class="skills-grid">
-    <div class="skill-category fade-in">
-      <div class="skill-cat-title">Embedded Systems</div>
-      <div class="skill-item" data-desc="Industry-standard language for writing firmware and low-level MCU code." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">Embedded C</span><span class="skill-pct">90%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="90"></div></div>
-      </div>
-      <div class="skill-item" data-desc="Experience with PIC, Arduino, and 8051 microcontrollers." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">Microcontrollers (PIC, Arduino, 8051)</span><span class="skill-pct">85%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="85"></div></div>
-      </div>
-      <div class="skill-item" data-desc="Peripheral communication protocols for sensors, displays, and modules." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">UART / SPI / I2C</span><span class="skill-pct">82%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="82"></div></div>
-      </div>
-      <div class="skill-item" data-desc="Fundamentals of real-time task scheduling, queues, and semaphores." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">RTOS Basics</span><span class="skill-pct">65%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="65"></div></div>
-      </div>
-    </div>
-
-    <div class="skill-category fade-in">
-      <div class="skill-cat-title">Hardware</div>
-      <div class="skill-item" data-desc="Schematic design and circuit analysis for embedded applications." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">Circuit Design</span><span class="skill-pct">80%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="80"></div></div>
-      </div>
-      <div class="skill-item" data-desc="Basic PCB layout, trace routing, and design rule checking." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">PCB Basics</span><span class="skill-pct">70%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="70"></div></div>
-      </div>
-      <div class="skill-item" data-desc="Interfacing temperature, humidity, ultrasonic, and I/O sensors with MCUs." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">Sensor Interfacing</span><span class="skill-pct">85%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="85"></div></div>
-      </div>
-      <div class="skill-item" data-desc="Multimeter, oscilloscope, and debugger-based hardware troubleshooting." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">Hardware Debugging</span><span class="skill-pct">75%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="75"></div></div>
-      </div>
-    </div>
-
-    <div class="skill-category fade-in">
-      <div class="skill-cat-title">Programming</div>
-      <div class="skill-item" data-desc="Core systems programming language — used for MCU firmware and drivers." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">C</span><span class="skill-pct">90%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="90"></div></div>
-      </div>
-      <div class="skill-item" data-desc="Scripting and automation for testing, data parsing, and tooling." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">Python</span><span class="skill-pct">72%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="72"></div></div>
-      </div>
-      <div class="skill-item" data-desc="Shell commands, Makefile, cross-compilation, and device driver basics." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">Embedded Linux Basics</span><span class="skill-pct">60%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="60"></div></div>
-      </div>
-    </div>
-
-    <div class="skill-category fade-in">
-      <div class="skill-cat-title">Tools & IDE</div>
-
-        <div class="skill-item" data-desc="MPLAB X IDE for developing, building, and debugging firmware for PIC microcontrollers using Embedded C." onclick="showSkillPopup(event, this)">
-        <div class="skill-info">
-          <span class="skill-name">MPLAB X IDE</span>
-          <span class="skill-pct">85%</span>
-        </div>
-        <div class="skill-bar">
-          <div class="skill-fill" data-pct="85"></div>
-        </div>
-      </div>
-            
-      <div class="skill-item" data-desc="Circuit simulation tool for testing embedded designs before hardware." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">Proteus Simulation</span><span class="skill-pct">80%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="80"></div></div>
-      </div>
-      <div class="skill-item" data-desc="Rapid prototyping and development for Arduino-compatible platforms." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">Arduino IDE</span><span class="skill-pct">88%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="88"></div></div>
-      </div>
-      <div class="skill-item" data-desc="Version control for firmware and project collaboration." onclick="showSkillPopup(event, this)">
-        <div class="skill-info"><span class="skill-name">Git & GitHub</span><span class="skill-pct">75%</span></div>
-        <div class="skill-bar"><div class="skill-fill" data-pct="75"></div></div>
-      </div>
-    </div>
-  </div>
+  <div class="skills-grid" id="skills-grid"><!-- Filled by renderSkills() --></div>
 </section>
 
 <!-- PROJECTS -->
 <section id="projects">
   <div class="section-header fade-in">
     <span class="section-num">03.</span>
-    <h2 class="section-title">Projects</h2>
+    <h2 class="section-title" id="projects-title"></h2>
     <div class="section-line"></div>
   </div>
-  <div class="projects-grid" id="projects-grid">
-    <!-- Injected by JS -->
-  </div>
+  <div class="projects-grid" id="projects-grid"><!-- Filled by renderProjects() --></div>
   <div class="github-cta fade-in">
-    <a href="https://github.com/Adhish-ece" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+    <a href="#" id="all-github-btn" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
       View All on GitHub →
     </a>
   </div>
@@ -1526,33 +1402,17 @@ footer a { color: var(--blue); text-decoration: none; }
 <section id="experience">
   <div class="section-header fade-in">
     <span class="section-num">04.</span>
-    <h2 class="section-title">Experience</h2>
+    <h2 class="section-title" id="experience-title"></h2>
     <div class="section-line"></div>
   </div>
-  <div class="exp-card fade-in">
-    <div class="exp-header">
-      <div>
-        <div class="exp-title">Embedded Systems Trainee</div>
-        <div class="exp-company">Emertxe Information Technology</div>
-      </div>
-      <div class="exp-period">2026 – PRESENT</div>
-      </div>
-      <ul class="exp-points" id="exp-list">
-        <li>Programmed PIC microcontrollers using Embedded C for basic embedded applications.</li>
-        <li>Implemented peripheral interfacing concepts such as GPIO control and basic communication handling.</li>
-        <li>Developed strong fundamentals in C programming with focus on memory, pointers, and structured code design.</li>
-        <li>Practiced C++ concepts including object-oriented programming basics and data handling.</li>
-        <li>Built problem-solving skills through small-scale embedded and programming projects.</li>
-        <li>Gained introductory knowledge of Python for scripting and basic automation tasks.</li>
-      </ul>
-      </div>
+  <div id="experience-list"><!-- Filled by renderExperience() --></div>
 </section>
 
 <!-- GITHUB STATS -->
 <section id="stats">
   <div class="section-header fade-in">
     <span class="section-num">05.</span>
-    <h2 class="section-title">GitHub Activity</h2>
+    <h2 class="section-title" id="github-title"></h2>
     <div class="section-line"></div>
   </div>
   <div class="github-stats-grid fade-in">
@@ -1599,11 +1459,11 @@ footer a { color: var(--blue); text-decoration: none; }
     <div>
       <h4 style="font-family:'Orbitron',monospace;font-size:13px;color:#fff;margin-bottom:24px;letter-spacing:2px;">GITHUB PROFILE</h4>
       <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim);margin-bottom:20px;">github.com/Adhish-ece</div>
-        <a href="https://github.com/Adhish-ece" target="_blank" class="btn btn-primary" style="font-size:10px;">Open GitHub Profile</a>
+        <div id="gh-profile-text" style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--text-dim);margin-bottom:20px;"></div>
+        <a href="#" id="gh-profile-btn" target="_blank" class="btn btn-primary" style="font-size:10px;">Open GitHub Profile</a>
       </div>
       <div style="margin-top:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px;">
-        <img src="https://ghchart.rshah.org/00bfff/Adhish-ece" alt="GitHub Contribution Chart" style="width:100%;border-radius:6px;opacity:0.9;" onerror="this.style.display='none'">
+        <img id="gh-chart" alt="GitHub Contribution Chart" style="width:100%;border-radius:6px;opacity:0.9;" onerror="this.style.display='none'">
         <div style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim);margin-top:8px;">Contribution Activity</div>
       </div>
     </div>
@@ -1614,49 +1474,49 @@ footer a { color: var(--blue); text-decoration: none; }
 <section id="contact">
   <div class="section-header fade-in">
     <span class="section-num">06.</span>
-    <h2 class="section-title">Contact</h2>
+    <h2 class="section-title" id="contact-title"></h2>
     <div class="section-line"></div>
   </div>
 
   <div class="contact-solo fade-in">
-    <h3 class="contact-heading">Let's Build Something Together</h3>
-    <p class="contact-sub">Whether you're exploring a collaboration, have an embedded systems challenge, or want to discuss firmware engineering opportunities — I'd be glad to connect. Open to full-time roles, internships, and project-based work.</p>
+    <h3 class="contact-heading" id="contact-heading"></h3>
+    <p class="contact-sub" id="contact-text"></p>
 
     <div class="contact-links-grid">
-      <a href="#" class="contact-link" id="email-contact-link">
+      <a href="#" class="contact-link" id="contact-email-link">
         <div class="contact-link-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
         </div>
         <div>
           <div class="clink-label">Email</div>
-          <div class="clink-value" id="email-display">adhishadhish547@gmail.com</div>
+          <div class="clink-value" id="contact-email-text"></div>
         </div>
       </a>
-      <a href="https://github.com/Adhish-ece" target="_blank" rel="noopener noreferrer" class="contact-link">
+      <a href="#" id="contact-github-link" target="_blank" rel="noopener noreferrer" class="contact-link">
         <div class="contact-link-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
         </div>
         <div>
           <div class="clink-label">GitHub</div>
-          <div class="clink-value">github.com/Adhish-ece</div>
+          <div class="clink-value" id="contact-github-text"></div>
         </div>
       </a>
-      <a href="https://www.linkedin.com/in/adhish-comm-engineer/" target="_blank" rel="noopener noreferrer" class="contact-link">
+      <a href="#" id="contact-linkedin-link" target="_blank" rel="noopener noreferrer" class="contact-link">
         <div class="contact-link-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
         </div>
         <div>
           <div class="clink-label">LinkedIn</div>
-          <div class="clink-value">https://www.linkedin.com/in/adhish-comm-engineer/</div>
+          <div class="clink-value" id="contact-linkedin-text"></div>
         </div>
       </a>
-      <a href="tel:+917994326336" class="contact-link">
+      <a href="#" id="contact-phone-link" class="contact-link">
         <div class="contact-link-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.64 3.4 2 2 0 0 1 3.6 1.2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.9a16 16 0 0 0 6 6l1.27-.9a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         </div>
         <div>
           <div class="clink-label">Phone</div>
-          <div class="clink-value">+91 7994 326336</div>
+          <div class="clink-value" id="contact-phone-text"></div>
         </div>
       </a>
     </div>
@@ -1665,8 +1525,8 @@ footer a { color: var(--blue); text-decoration: none; }
 
 <!-- FOOTER -->
 <footer>
-  <span>© 2026 ADHISH | EMBEDDED SYSTEMS ENGINEER</span>
-  <span>DESIGNED & BUILT WITH ⚡ <a href="https://github.com/Adhish-ece" target="_blank" rel="noopener noreferrer">ADHISH-ECE</a></span>
+  <span id="footer-left"></span>
+  <span><span id="footer-right"></span> <a href="#" id="footer-link" target="_blank" rel="noopener noreferrer"></a></span>
 </footer>
 
 <!-- BACK TO TOP -->
@@ -1679,10 +1539,11 @@ footer a { color: var(--blue); text-decoration: none; }
 <!-- SKILL POPUP -->
 <div class="skill-popup" id="skill-popup"></div>
 
-<!-- PROJECT MODAL -->
+<!-- PROJECT MODAL (filled from portfolioData.projects by openModal()) -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal" style="position:relative">
-    <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button>
+    <button class="modal-close" onclick="closeModalNow()">✕</button>
+    <img class="modal-image" id="modal-image" alt="" hidden>
     <div class="modal-title" id="modal-title"></div>
     <div class="modal-body" id="modal-body"></div>
     <div class="modal-techs" id="modal-techs"></div>
@@ -1693,8 +1554,515 @@ footer a { color: var(--blue); text-decoration: none; }
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" onerror="void(0)"></script>
 <script>
+/* =========================================================
+   🚀 PORTFOLIO CONTENT — EDIT ONLY THIS SECTION
+   ---------------------------------------------------------
+   EDIT CONTENT ONLY IN THIS SECTION.
+
+   You normally do NOT need to edit:
+   HTML
+   CSS
+   animations
+   navigation
+   modal logic
+   JavaScript functionality (everything below the content section)
+
+   HOW TO ADD A PROJECT:
+   1. Put the image in the  projects/  folder (optional).
+   2. Copy one { ... } block inside "projects" below,
+      paste it after the last one (don't forget the comma!),
+      and change the text.
+   3. Save index.html and refresh the browser. Done.
+
+   TIPS:
+   - Text goes inside "quotes". Lists go inside [ ] separated by commas.
+   - Leave an image as ""  to use the default chip icon.
+   - In "about.paragraphs" you can use <strong>word</strong> for highlights.
+   ========================================================= */
+
+const portfolioData = {
+
+  // ================= PROFILE =================
+  profile: {
+    pageTitle: "Adhish | Embedded Systems Engineer",
+    name: "Adhish",                       // shown in hero + used as photo alt text
+    logoText: "ADHISH",                   // text next to the chip icon in the navbar
+    heroGreeting: "> ENGINEER.INIT()",    // small text above the name
+    heroHello: "Hi, I'm",                 // text before your name
+    typedRoles: [                         // roles that cycle in the typing animation
+      "Embedded Systems Engineer",
+      "Firmware Developer",
+      "Electronics Innovator",
+      "Hardware-Software Architect"
+    ],
+    heroDescription: "Electronics & Communication Engineer specializing in Embedded Systems, Firmware Development, and hardware-software integration. Building reliable systems at the edge of hardware.",
+    profileImage: "photo/photo.JPG",      // "" shows a placeholder
+    resume: "resume/resume.pdf",          // "" hides the Download Resume button
+    resumeDownloadName: "Adhish_Resume.pdf",
+    footerLeft: "© 2026 ADHISH | EMBEDDED SYSTEMS ENGINEER",
+    footerRight: "DESIGNED & BUILT WITH ⚡",
+    footerLinkText: "ADHISH-ECE"          // links to your GitHub (see CONTACT)
+  },
+
+  // ================= SECTION TITLES =================
+  sectionTitles: {
+    about: "About Me",
+    skills: "Technical Skills",
+    projects: "Projects",
+    experience: "Experience",
+    github: "GitHub Activity",
+    contact: "Contact"
+  },
+
+  // ================= ABOUT =================
+  about: {
+    paragraphs: [
+      "I'm an Electronics & Communication Engineer with a strong interest in <strong>Embedded Systems</strong> and <strong>Firmware Development</strong>. I enjoy working at the intersection of hardware and software, building practical systems that solve real-world problems.",
+      "I have working knowledge of <strong>C</strong>, <strong>C++</strong>, and basic <strong>Python</strong>, along with hands-on experience in microcontrollers, communication protocols, and low-level programming. I focus on writing efficient, reliable code that interacts directly with hardware.",
+      "Currently, I am undergoing professional training at <strong>Emertxe Information Technology</strong>, where I am strengthening my skills in embedded C, Linux, RTOS concepts, and peripheral interfacing. I continuously work on improving my problem-solving and system design abilities."
+    ]
+  },
+
+  // ================= STATS (the 3 counters under About) =================
+  // "number" counts up and a "+" is added automatically.
+  stats: [
+    { number: 10, label: "Projects Built" },
+    { number: 4,  label: "MCU Families" },
+    { number: 6,  label: "Years Learning" }
+  ],
+
+  // ================= EDUCATION / JOURNEY (timeline next to About) =================
+  timeline: [
+    {
+      period: "2026 – PRESENT",
+      title: "Embedded Systems Training",
+      subtitle: "Emertxe Information Technology",
+      details: "Completed intensive hands-on training in C, C++, and Data Structures with strong fundamentals in Linux operating system concepts. Gained practical experience working with PIC microcontrollers, including peripheral interfacing and embedded system development."
+    },
+    {
+      period: "2022 – 2025",
+      title: "B.Tech – Electronics & Communication",
+      subtitle: "Bachelor of Technology",
+      details: "Comprehensive curriculum covering digital electronics, signal processing, VLSI design, communication systems, and microprocessor architecture. Strong foundation in both theory and lab-based experimentation."
+    },
+    {
+      period: "2019 – 2022",
+      title: "Diploma – Electronics Engineering",
+      subtitle: "Polytechnic Diploma",
+      details: "Foundational grounding in electronic circuits, PCB design, instrumentation, and basic microcontroller programming. Developed practical skills through lab projects and mini-systems development."
+    },
+    {
+      period: "EARLIER",
+      title: "THSLC – Electronics Trade",
+      subtitle: "Technical High School",
+      details: "Vocational training in electronics fundamentals — resistors, capacitors, semiconductors, and basic circuit troubleshooting. This is where the engineering journey began."
+    }
+  ],
+
+  // ================= SKILLS =================
+  // Each category has a title and a list of skills.
+  // level = percentage (0-100) shown on the bar. description = popup text on click.
+  skills: [
+    {
+      title: "Embedded Systems",
+      items: [
+        { name: "Embedded C", level: 90, description: "Industry-standard language for writing firmware and low-level MCU code." },
+        { name: "Microcontrollers (PIC, Arduino, 8051)", level: 85, description: "Experience with PIC, Arduino, and 8051 microcontrollers." },
+        { name: "UART / SPI / I2C", level: 82, description: "Peripheral communication protocols for sensors, displays, and modules." },
+        { name: "RTOS Basics", level: 65, description: "Fundamentals of real-time task scheduling, queues, and semaphores." }
+      ]
+    },
+    {
+      title: "Hardware",
+      items: [
+        { name: "Circuit Design", level: 80, description: "Schematic design and circuit analysis for embedded applications." },
+        { name: "PCB Basics", level: 70, description: "Basic PCB layout, trace routing, and design rule checking." },
+        { name: "Sensor Interfacing", level: 85, description: "Interfacing temperature, humidity, ultrasonic, and I/O sensors with MCUs." },
+        { name: "Hardware Debugging", level: 75, description: "Multimeter, oscilloscope, and debugger-based hardware troubleshooting." }
+      ]
+    },
+    {
+      title: "Programming",
+      items: [
+        { name: "C", level: 90, description: "Core systems programming language — used for MCU firmware and drivers." },
+        { name: "Python", level: 72, description: "Scripting and automation for testing, data parsing, and tooling." },
+        { name: "Embedded Linux Basics", level: 60, description: "Shell commands, Makefile, cross-compilation, and device driver basics." }
+      ]
+    },
+    {
+      title: "Tools & IDE",
+      items: [
+        { name: "MPLAB X IDE", level: 85, description: "MPLAB X IDE for developing, building, and debugging firmware for PIC microcontrollers using Embedded C." },
+        { name: "Proteus Simulation", level: 80, description: "Circuit simulation tool for testing embedded designs before hardware." },
+        { name: "Arduino IDE", level: 88, description: "Rapid prototyping and development for Arduino-compatible platforms." },
+        { name: "Git & GitHub", level: 75, description: "Version control for firmware and project collaboration." }
+      ]
+    }
+  ],
+
+  // ================= PROJECTS =================
+  // Cards AND the popup window are both generated from this list.
+  // category     : small tag on the card (e.g. "C PROJECT")
+  // description  : full text (card shows the first 100 characters, popup shows all)
+  // image        : "projects/name.jpg"  or  ""  (empty = default chip icon)
+  // technologies : badges
+  // github       : link for the "View on GitHub" button
+  projects: [
+    {
+  title: "Raspberry Pi Automatic Fan Control",
+  category: "EMBEDDED C / PYTHON PROJECT",
+  description: "An automated cooling system for Raspberry Pi that monitors CPU temperature using GPIO pins and dynamically controls a cooling fan via transistor/PWM switching to prevent thermal throttling.",
+  image: "",
+  technologies: ["Raspberry Pi", "Embedded C / Python", "GPIO", "PWM Control", "Hardware Interfacing"],
+  github: "https://github.com/Adhish-ece/Raspberry-pi-fan"
+},
+    {
+  title: "Digital Parking Management System",
+  category: "C PROJECT",
+  description: "A command-line application written in C that automates vehicle parking allocation, tracks entry/exit times, calculates parking fees, and manages available spaces efficiently.",
+  image: "",
+  technologies: ["C", "File I/O", "Data Structures", "Command Line Tool"],
+  github: "https://github.com/Adhish-ece/Digital-Parking-Management-System"
+},
+    {
+  title: "File Encoder & Decoder",
+  category: "C PROJECT",
+  description: "A command-line file encryption and compression tool written in C that encodes text files using algorithms like Huffman Coding or Run-Length Encoding (RLE) and decodes them back to their original form.",
+  image: "",
+  technologies: ["C", "File I/O", "Data Compression", "Command Line Tool"],
+  github: "https://github.com/Adhish-ece/File-Encoder"
+},
+    {
+  title: "Address Book System",
+  category: "C PROJECT",
+  description: "A command-line contact management application written in C that enables users to add, search, edit, delete, and store contact details using file I/O operations.",
+  image: "",
+  technologies: ["C", "File I/O", "Data Structures", "Command Line Tool"],
+  github: "https://github.com/Adhish-ece/Address-Book"
+},
+    {
+      title: "Arbitrary Precision Calculator (APC)",
+      category: "C PROJECT",
+      description: "A C-based command-line calculator that performs arithmetic operations on integers of arbitrarily large precision using doubly linked lists to overcome standard data type limits.",
+      image: "",
+      technologies: ["C", "Arbitrary Precision Arithmetic", "Doubly Linked List", "Command Line Tool"],
+      github: "https://github.com/Adhish-ece/APC"
+    },
+    {
+      title: "C Syntax to HTML Converter",
+      category: "C PROJECT",
+      description: "A command-line utility written in C that converts C source and header files into clean, dark-themed HTML with syntax highlighting. Demonstrates modular file structure and custom parsing logic.",
+      image: "",
+      technologies: ["C", "Modular Programming", "File I/O", "HTML Generation"],
+      github: "https://github.com/Adhish-ece/Source-code-html"
+    },
+    {
+      title: "BMP Image Steganography Tool",
+      category: "C PROJECT",
+      description: "A command-line steganography tool written in C that hides (encodes) any file inside a BMP image and later extracts (decodes) it using the Least Significant Bit (LSB) technique.",
+      image: "",
+      technologies: ["C", "LSB Steganography", "File I/O", "Command Line Tool"],
+      github: "https://github.com/Adhish-ece/Image-Stenography"
+    },
+    {
+      title: "MP3 Tag Reader",
+      category: "C PROJECT",
+      description: "A command-line tool written in C that reads and modifies metadata tags (such as Title, Artist, Album, Year, Genre, and Composer) from ID3v2 format within MP3 audio files.",
+      image: "",
+      technologies: ["C", "ID3 Tags", "Binary File I/O", "Command Line Tool"],
+      github: "https://github.com/Adhish-ece/MP3-TAG-READER"
+    },
+        {
+      title: "Lexical Analyzer",
+      category: "COMPILER DESIGN",
+      description: "A command-line lexical analyzer implemented in C that reads source code and identifies tokens such as keywords, identifiers, operators, and literals according to defined grammar rules.",
+      image: "",
+      technologies: ["C", "Lexical Analysis", "Finite State Machine", "File I/O"],
+      github: "https://github.com/Adhish-ece/Lexical-Analyzer"
+    },
+    {
+      title: "Raspberry Pi CCTV with Motion Detection",
+      category: "PYTHON & RASPBERRY PI",
+      description: "A Raspberry Pi-based motion detection security system using a PIR sensor and USB webcam. When motion is detected, the system captures a short video and automatically uploads it to a Discord channel using a bot.",
+      image: "",
+      technologies: ["Python", "OpenCV", "Raspberry Pi", "PIR Sensor", "Discord Bot"],
+      github: "https://github.com/Adhish-ece/raspberry-pi-cctv"
+    },
+    
+    {
+      title: "Obstacle Avoidance Robot",
+      category: "ROBOTICS",
+      description: "Autonomous mobile robot using ultrasonic sensors and Arduino. Implements reactive navigation logic to avoid obstacles in real-time with servo-based scanning.",
+      image: "",
+      technologies: ["Arduino", "HC-SR04", "Servo", "L298N", "C++"],
+      github: "https://github.com/Adhish-ece"
+    },
+    {
+      title: "Automatic Street Light Controller",
+      category: "ARDUINO",
+      description: "Arduino-based automatic street light system using LDR and PIR sensor. The system switches lights ON/OFF based on ambient light conditions and detects human movement to optimize power usage.",
+      image: "",
+      technologies: ["Arduino", "Arduino IDE", "LDR Sensor", "PIR Sensor", "Relay Module"],
+      github: "https://github.com/Adhish-ece"
+    },
+    
+  ],
+
+  // ================= EXPERIENCE =================
+  // Add more { ... } blocks to show more experience cards.
+  experience: [
+    {
+      title: "Embedded Systems Trainee",
+      company: "Emertxe Information Technology",
+      period: "2026 – PRESENT",
+      points: [
+        "Programmed PIC microcontrollers using Embedded C for basic embedded applications.",
+        "Implemented peripheral interfacing concepts such as GPIO control and basic communication handling.",
+        "Developed strong fundamentals in C programming with focus on memory, pointers, and structured code design.",
+        "Practiced C++ concepts including object-oriented programming basics and data handling.",
+        "Built problem-solving skills through small-scale embedded and programming projects.",
+        "Gained introductory knowledge of Python for scripting and basic automation tasks."
+      ]
+    }
+  ],
+
+  // ================= GITHUB SECTION =================
+  // Live numbers come from the GitHub API using "username".
+  // "fallback" values are shown if the API is unavailable.
+  github: {
+    username: "Adhish-ece",
+    fallbackStats: { repos: 6, stars: 2, forks: 1, activity: 10 },
+    fallbackLanguages: { c: 65, python: 25, shell: 7, other: 3 }
+  },
+
+  // ================= CONTACT =================
+  contact: {
+    heading: "Let's Build Something Together",
+    text: "Whether you're exploring a collaboration, have an embedded systems challenge, or want to discuss firmware engineering opportunities — I'd be glad to connect. Open to full-time roles, internships, and project-based work.",
+    email: "adhishadhish547@gmail.com",
+    github: "https://github.com/Adhish-ece",
+    githubDisplay: "github.com/Adhish-ece",
+    linkedin: "https://www.linkedin.com/in/adhish-comm-engineer/",
+    linkedinDisplay: "https://www.linkedin.com/in/adhish-comm-engineer/",
+    phone: "+917994326336",             // used for the tel: link (no spaces)
+    phoneDisplay: "+91 7994 326336"     // what visitors see
+  }
+};
+
+/* =========================================================
+   END OF CONTENT SECTION — no need to edit below this line
+   ========================================================= */
+
+
+// ============= RENDER FUNCTIONS (build the page from portfolioData) =============
+const $ = id => document.getElementById(id);
+
+const CHIP_SVG = `<svg class="project-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="10" y="10" width="24" height="24" rx="3" stroke="currentColor" stroke-width="1.5"/>
+  <rect x="15" y="15" width="14" height="14" rx="2" fill="rgba(0,191,255,0.1)" stroke="currentColor" stroke-width="1"/>
+  <line x1="10" y1="16" x2="6" y2="16" stroke="currentColor" stroke-width="1.5"/>
+  <line x1="10" y1="22" x2="6" y2="22" stroke="currentColor" stroke-width="1.5"/>
+  <line x1="10" y1="28" x2="6" y2="28" stroke="currentColor" stroke-width="1.5"/>
+  <line x1="34" y1="16" x2="38" y2="16" stroke="currentColor" stroke-width="1.5"/>
+  <line x1="34" y1="22" x2="38" y2="22" stroke="currentColor" stroke-width="1.5"/>
+  <line x1="34" y1="28" x2="38" y2="28" stroke="currentColor" stroke-width="1.5"/>
+  <line x1="16" y1="10" x2="16" y2="6" stroke="currentColor" stroke-width="1.5"/>
+  <line x1="22" y1="10" x2="22" y2="6" stroke="currentColor" stroke-width="1.5"/>
+  <line x1="28" y1="10" x2="28" y2="6" stroke="currentColor" stroke-width="1.5"/>
+  <line x1="16" y1="34" x2="16" y2="38" stroke="currentColor" stroke-width="1.5"/>
+  <line x1="22" y1="34" x2="22" y2="38" stroke="currentColor" stroke-width="1.5"/>
+  <line x1="28" y1="34" x2="28" y2="38" stroke="currentColor" stroke-width="1.5"/>
+</svg>`;
+
+const GITHUB_ICON = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>`;
+
+function renderProfile() {
+  const p = portfolioData.profile;
+  document.title = p.pageTitle;
+  $('logo-text').textContent = p.logoText;
+  $('hero-greeting').textContent = p.heroGreeting;
+  $('hero-hello').textContent = p.heroHello;
+  $('hero-name').textContent = p.name;
+  $('hero-desc').textContent = p.heroDescription;
+
+  // Profile photo (placeholder if empty)
+  const box = $('hero-photo-box');
+  if (p.profileImage) {
+    box.innerHTML = `<img src="${p.profileImage}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+  } else {
+    box.innerHTML = `<div class="photo-placeholder">PHOTO</div>`;
+  }
+
+  // Resume button
+  const resumeBtn = $('resume-btn');
+  if (p.resume) {
+    resumeBtn.href = p.resume;
+    resumeBtn.setAttribute('download', p.resumeDownloadName || '');
+  } else {
+    resumeBtn.style.display = 'none';
+  }
+
+  // Footer
+  $('footer-left').textContent = p.footerLeft;
+  $('footer-right').textContent = p.footerRight;
+  $('footer-link').textContent = p.footerLinkText;
+  $('footer-link').href = portfolioData.contact.github;
+}
+
+function renderSectionTitles() {
+  const t = portfolioData.sectionTitles;
+  $('about-title').textContent = t.about;
+  $('skills-title').textContent = t.skills;
+  $('projects-title').textContent = t.projects;
+  $('experience-title').textContent = t.experience;
+  $('github-title').textContent = t.github;
+  $('contact-title').textContent = t.contact;
+}
+
+function renderAbout() {
+  $('about-paragraphs').innerHTML = portfolioData.about.paragraphs.map(t => `<p>${t}</p>`).join('');
+}
+
+function renderStats() {
+  $('stats-row').innerHTML = portfolioData.stats.map(s => `
+    <div class="stat-card">
+      <div class="stat-num" data-target="${s.number}">0</div>
+      <div class="stat-label">${s.label}</div>
+    </div>`).join('');
+}
+
+function renderTimeline() {
+  const wrap = $('timeline');
+  portfolioData.timeline.forEach(t => {
+    const item = document.createElement('div');
+    item.className = 'timeline-item';
+    item.innerHTML = `
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <div class="timeline-year">${t.period}</div>
+        <div class="timeline-title">${t.title}</div>
+        <div class="timeline-sub">${t.subtitle}</div>
+        <div class="timeline-details">${t.details}</div>
+      </div>`;
+    item.addEventListener('click', () => toggleTimeline(item));
+    wrap.appendChild(item);
+  });
+}
+
+function renderSkills() {
+  const grid = $('skills-grid');
+  portfolioData.skills.forEach(cat => {
+    const box = document.createElement('div');
+    box.className = 'skill-category fade-in';
+    box.innerHTML = `<div class="skill-cat-title">${cat.title}</div>` + cat.items.map(s => `
+      <div class="skill-item" data-desc="${(s.description || '').replace(/"/g, '&quot;')}">
+        <div class="skill-info"><span class="skill-name">${s.name}</span><span class="skill-pct">${s.level}%</span></div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="${s.level}"></div></div>
+      </div>`).join('');
+    box.querySelectorAll('.skill-item').forEach(el => {
+      el.addEventListener('click', e => showSkillPopup(e, el));
+    });
+    grid.appendChild(box);
+  });
+}
+
+function renderProjects() {
+  const grid = $('projects-grid');
+  portfolioData.projects.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'project-card fade-in';
+    const shortDesc = p.description.length > 100 ? p.description.substring(0, 100) + '...' : p.description;
+    card.innerHTML = `
+      <div class="project-visual"></div>
+      <div class="project-tag">${p.category}</div>
+      <div class="project-title">${p.title}</div>
+      <div class="project-desc">${shortDesc}</div>
+      <div class="project-techs">${p.technologies.map(t => `<span class="tech-badge">${t}</span>`).join('')}</div>
+      <div class="project-link-row">${GITHUB_ICON} View Project</div>
+    `;
+
+    // Image if provided, otherwise (or if the image fails to load) the default chip icon
+    const visual = card.querySelector('.project-visual');
+    const showIcon = () => { visual.outerHTML = CHIP_SVG; };
+    if (p.image) {
+      const img = document.createElement('img');
+      img.className = 'project-image';
+      img.alt = p.title;
+      img.src = p.image;
+      img.onerror = () => { img.replaceWith(Object.assign(document.createElement('div'), { innerHTML: CHIP_SVG }).firstChild); };
+      visual.replaceWith(img);
+    } else {
+      showIcon();
+    }
+
+    card.addEventListener('click', () => openModal(p));
+    // 3D tilt
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `translateY(-6px) rotateX(${-y*8}deg) rotateY(${x*8}deg)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+    grid.appendChild(card);
+  });
+  $('all-github-btn').href = portfolioData.contact.github;
+}
+
+function renderExperience() {
+  const wrap = $('experience-list');
+  portfolioData.experience.forEach(x => {
+    const card = document.createElement('div');
+    card.className = 'exp-card fade-in';
+    card.innerHTML = `
+      <div class="exp-header">
+        <div>
+          <div class="exp-title">${x.title}</div>
+          <div class="exp-company">${x.company}</div>
+        </div>
+        <div class="exp-period">${x.period}</div>
+      </div>
+      <ul class="exp-points">${x.points.map(pt => `<li>${pt}</li>`).join('')}</ul>`;
+    wrap.appendChild(card);
+  });
+}
+
+function renderGithubSection() {
+  const user = portfolioData.github.username;
+  const url = 'https://github.com/' + user;
+  $('gh-profile-text').textContent = 'github.com/' + user;
+  $('gh-profile-btn').href = url;
+  $('gh-chart').src = 'https://ghchart.rshah.org/00bfff/' + user;
+}
+
+function renderContact() {
+  const c = portfolioData.contact;
+  $('contact-heading').textContent = c.heading;
+  $('contact-text').textContent = c.text;
+  $('contact-email-link').href = 'mailto:' + c.email;
+  $('contact-email-text').textContent = c.email;
+  $('contact-github-link').href = c.github;
+  $('contact-github-text').textContent = c.githubDisplay;
+  $('contact-linkedin-link').href = c.linkedin;
+  $('contact-linkedin-text').textContent = c.linkedinDisplay;
+  $('contact-phone-link').href = 'tel:' + c.phone;
+  $('contact-phone-text').textContent = c.phoneDisplay;
+}
+
+// Build everything (must happen before the animation/cursor code below)
+renderProfile();
+renderSectionTitles();
+renderAbout();
+renderStats();
+renderTimeline();
+renderSkills();
+renderProjects();
+renderExperience();
+renderGithubSection();
+renderContact();
+
+
 // ============= LOADER =============
 function dismissLoader() {
   var loader = document.getElementById('loader');
@@ -1836,7 +2204,7 @@ function drawPCB() {
 drawPCB();
 
 // ============= TYPING =============
-const roles = ['Embedded Systems Engineer', 'Firmware Developer', 'Electronics Innovator', 'Hardware-Software Architect'];
+const roles = portfolioData.profile.typedRoles;
 let rIdx = 0, cIdx = 0, deleting = false;
 const typedEl = document.getElementById('typed-text');
 function typeLoop() {
@@ -1899,7 +2267,7 @@ function animateBar(barEl, pct) {
 
 // ============= LIVE GITHUB API =============
 async function fetchGitHubStats() {
-  const USERNAME = 'Adhish-ece';
+  const USERNAME = portfolioData.github.username;
   const BASE = 'https://api.github.com';
 
   try {
@@ -1953,13 +2321,6 @@ async function fetchGitHubStats() {
 
     if (sorted.length === 0 || totalBytes === 0) return;
 
-    // Map known languages to our fixed bars
-    const langMap = {
-      c:     ['C', 'lang-c-pct',     'lang-c-bar'],
-      python:['Python', 'lang-py-pct', 'lang-py-bar'],
-      shell: ['Shell / Makefile', 'lang-sh-pct', 'lang-sh-bar'],
-    };
-
     // Calculate % for C, Python, Shell
     const byName = {};
     sorted.forEach(([lang, bytes]) => {
@@ -1969,7 +2330,6 @@ async function fetchGitHubStats() {
     const cBytes     = (byName['c'] || 0) + (byName['c++'] || 0);
     const pyBytes    = byName['python'] || 0;
     const shBytes    = (byName['shell'] || 0) + (byName['makefile'] || 0);
-    const otherBytes = totalBytes - cBytes - pyBytes - shBytes;
 
     const pct = v => Math.round((v / totalBytes) * 100);
     const cPct     = pct(cBytes);
@@ -2001,16 +2361,15 @@ async function fetchGitHubStats() {
   } catch (err) {
     // Silently fall back to default display if API fails (rate limit, network, etc.)
     console.warn('GitHub API fetch failed:', err.message);
-    // Show fallback static values
-    const fallbacks = [
-      ['gh-repos', 6], ['gh-stars', 2], ['gh-forks', 1], ['gh-commits', 10]
-    ];
-    fallbacks.forEach(([id, val]) => {
+    const fs = portfolioData.github.fallbackStats;
+    const fl = portfolioData.github.fallbackLanguages;
+    [['gh-repos', fs.repos], ['gh-stars', fs.stars], ['gh-forks', fs.forks], ['gh-commits', fs.activity]]
+    .forEach(([id, val]) => {
       const el = document.getElementById(id);
       if (el) animateCounter(el, val);
     });
-    [['lang-c-pct','lang-c-bar',65],['lang-py-pct','lang-py-bar',25],
-     ['lang-sh-pct','lang-sh-bar',7],['lang-other-pct','lang-other-bar',3]]
+    [['lang-c-pct','lang-c-bar',fl.c],['lang-py-pct','lang-py-bar',fl.python],
+     ['lang-sh-pct','lang-sh-bar',fl.shell],['lang-other-pct','lang-other-bar',fl.other]]
     .forEach(([p,b,v]) => {
       const pe = document.getElementById(p); const be = document.getElementById(b);
       if (pe) pe.textContent = v + '%';
@@ -2055,123 +2414,39 @@ function showSkillPopup(e, el) {
   setTimeout(() => skillPopup.classList.remove('show'), 3000);
 }
 
-// ============= PROJECTS =============
-const projectsData = [
-  {
-    title: 'C Syntax to HTML Converter',
-    tag: 'C PROJECT',
-    desc: 'A command-line utility written in C that converts C source and header files into clean, dark-themed HTML with syntax highlighting. Demonstrates modular file structure and custom parsing logic.',
-    techs: ['C', 'Modular Programming', 'File I/O', 'HTML Generation'],
-    link: 'https://github.com/Adhish-ece/Source-code-html'
-  },
-  {
-    title: 'Raspberry Pi CCTV with Motion Detection',
-    tag: 'PYTHON & RASPBERRY PI',
-    desc: 'A Raspberry Pi-based motion detection security system using a PIR sensor and USB webcam. When motion is detected, the system captures a short video and automatically uploads it to a Discord channel using a bot.',
-    techs: ['Python', 'OpenCV', 'Raspberry Pi', 'PIR Sensor', 'Discord Bot'],
-    link: 'https://github.com/Adhish-ece/raspberry-pi-cctv'
-  },
-  {
-    title: 'BMP Image Steganography Tool',
-    tag: 'C PROJECT',
-    desc: 'A command-line steganography tool written in C that hides (encodes) any file inside a BMP image and later extracts (decodes) it using the Least Significant Bit (LSB) technique.',
-    techs: ['C', 'LSB Steganography', 'File I/O', 'Command Line Tool'],
-    link: 'https://github.com/Adhish-ece/Image-Stenography'
-  },
-  {
-    title: 'Obstacle Avoidance Robot',
-    tag: 'ROBOTICS',
-    desc: 'Autonomous mobile robot using ultrasonic sensors and Arduino. Implements reactive navigation logic to avoid obstacles in real-time with servo-based scanning.',
-    techs: ['Arduino', 'HC-SR04', 'Servo', 'L298N', 'C++'],
-    link: 'https://github.com/Adhish-ece'
-  },
-  {
-    title: 'Automatic Street Light Controller',
-    tag: 'ARDUINO',
-    desc: 'Arduino-based automatic street light system using LDR and PIR sensor. The system switches lights ON/OFF based on ambient light conditions and detects human movement to optimize power usage.',
-    techs: ['Arduino', 'Arduino IDE', 'LDR Sensor', 'PIR Sensor', 'Relay Module'],
-    link: 'https://github.com/Adhish-ece'
-  },
-  {
-    title: 'Lexical Analyzer',
-    tag: 'COMPILER DESIGN',
-    desc: 'A command-line lexical analyzer implemented in C that reads source code and identifies tokens such as keywords, identifiers, operators, and literals according to defined grammar rules.',
-    techs: ['C', 'Lexical Analysis', 'Finite State Machine', 'File I/O'],
-    link: 'https://github.com/Adhish-ece/Lexical-Analyzer'
-  }
-];
-
-const grid = document.getElementById('projects-grid');
-const chipSVG = `<svg class="project-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect x="10" y="10" width="24" height="24" rx="3" stroke="currentColor" stroke-width="1.5"/>
-  <rect x="15" y="15" width="14" height="14" rx="2" fill="rgba(0,191,255,0.1)" stroke="currentColor" stroke-width="1"/>
-  <line x1="10" y1="16" x2="6" y2="16" stroke="currentColor" stroke-width="1.5"/>
-  <line x1="10" y1="22" x2="6" y2="22" stroke="currentColor" stroke-width="1.5"/>
-  <line x1="10" y1="28" x2="6" y2="28" stroke="currentColor" stroke-width="1.5"/>
-  <line x1="34" y1="16" x2="38" y2="16" stroke="currentColor" stroke-width="1.5"/>
-  <line x1="34" y1="22" x2="38" y2="22" stroke="currentColor" stroke-width="1.5"/>
-  <line x1="34" y1="28" x2="38" y2="28" stroke="currentColor" stroke-width="1.5"/>
-  <line x1="16" y1="10" x2="16" y2="6" stroke="currentColor" stroke-width="1.5"/>
-  <line x1="22" y1="10" x2="22" y2="6" stroke="currentColor" stroke-width="1.5"/>
-  <line x1="28" y1="10" x2="28" y2="6" stroke="currentColor" stroke-width="1.5"/>
-  <line x1="16" y1="34" x2="16" y2="38" stroke="currentColor" stroke-width="1.5"/>
-  <line x1="22" y1="34" x2="22" y2="38" stroke="currentColor" stroke-width="1.5"/>
-  <line x1="28" y1="34" x2="28" y2="38" stroke="currentColor" stroke-width="1.5"/>
-</svg>`;
-
-projectsData.forEach((p, i) => {
-  const card = document.createElement('div');
-  card.className = 'project-card fade-in';
-  card.innerHTML = `
-    ${chipSVG}
-    <div class="project-tag">${p.tag}</div>
-    <div class="project-title">${p.title}</div>
-    <div class="project-desc">${p.desc.substring(0,100)}...</div>
-    <div class="project-techs">${p.techs.map(t=>`<span class="tech-badge">${t}</span>`).join('')}</div>
-    <div class="project-link-row">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-      View Project
-    </div>
-  `;
-  card.addEventListener('click', () => openModal(p));
-  // 3D tilt
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    card.style.transform = `translateY(-6px) rotateX(${-y*8}deg) rotateY(${x*8}deg)`;
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = '';
-  });
-  grid.appendChild(card);
-  observer.observe(card);
-});
-
-// ============= MODAL =============
+// ============= MODAL (uses the same project object as the card) =============
 function openModal(p) {
+  const img = document.getElementById('modal-image');
+  if (p.image) {
+    img.src = p.image;
+    img.alt = p.title;
+    img.hidden = false;
+    img.onerror = () => { img.hidden = true; };
+  } else {
+    img.hidden = true;
+    img.removeAttribute('src');
+  }
   document.getElementById('modal-title').textContent = p.title;
-  document.getElementById('modal-body').innerHTML = `<p style="margin-bottom:12px;">${p.desc}</p>`;
-  document.getElementById('modal-techs').innerHTML = p.techs.map(t => `<span class="tech-badge" style="font-size:12px;padding:5px 12px;">${t}</span>`).join('');
-  document.getElementById('modal-link').href = p.link;
+  document.getElementById('modal-body').innerHTML = `<p style="margin-bottom:12px;">${p.description}</p>`;
+  document.getElementById('modal-techs').innerHTML = p.technologies.map(t => `<span class="tech-badge" style="font-size:12px;padding:5px 12px;">${t}</span>`).join('');
+  document.getElementById('modal-link').href = p.github;
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+function closeModalNow() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
 function closeModal(e) {
-  if (e.target === document.getElementById('modal-overlay')) {
-    document.getElementById('modal-overlay').classList.remove('open');
-    document.body.style.overflow = '';
-  }
+  if (e.target === document.getElementById('modal-overlay')) closeModalNow();
 }
 // Close modal on ESC key
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    document.getElementById('modal-overlay').classList.remove('open');
-    document.body.style.overflow = '';
+    closeModalNow();
     closeMobileNavIfOpen();
   }
 });
-// Close modal X button (also works via onclick on the button itself)
 
 // ============= SMOOTH SCROLL FUNCTION =============
 function smoothScroll(e, sectionId) {
@@ -2227,32 +2502,6 @@ function closeMobileNavIfOpen() {
     closeMobileNav(null);
   }
 }
-
-// ============= EMAIL LINK (bypass Cloudflare obfuscation) =============
-(function() {
-  var u = 'adhishadhish547', d = 'gmail.com';
-  var link = document.getElementById('email-contact-link');
-  if (link) link.href = 'mailto:' + u + '@' + d;
-})();
-
-// ============= RESUME DOWNLOAD NOTICE =============
-// The Download Resume button uses href="resume.pdf" — just place your PDF 
-// named "resume.pdf" in the same folder as this HTML file.
-// Or update the href on #resume-btn to the actual path/URL.
-document.getElementById('resume-btn').addEventListener('click', function(e) {
-  // If no resume file is set up, show a small tooltip instead of 404
-  // Remove this listener once you've added your actual resume.pdf
-  const href = this.getAttribute('href');
-  if (href === 'resume.pdf') {
-    e.preventDefault();
-    const tip = document.createElement('div');
-    tip.style.cssText = `position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid var(--blue);color:var(--text);padding:12px 24px;border-radius:8px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;z-index:9000;box-shadow:var(--glow-blue);text-align:center;`;
-    tip.innerHTML = '📄 Add your <strong style="color:var(--blue)">resume.pdf</strong> file to the same folder as this HTML file.';
-    document.body.appendChild(tip);
-    setTimeout(() => tip.remove(), 4000);
-  }
-});
-
 </script>
 </body>
 </html>
